@@ -3,6 +3,8 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File as FileRule;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\ID;
@@ -48,49 +50,58 @@ class Book extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            ID::make()->onlyOnDetail(),
+            ID::make()
+                ->onlyOnDetail(),
 
             Image::make('Cover')
                 ->required()
                 ->help('The front cover of the book')
-                ->path('covers'),
+                ->path('covers')
+                ->rules(FileRule::image()->max(4 * 1024))
+                ->creationRules('required'),
 
             Text::make('Title')
                 ->sortable()
-                ->required()
-                ->filterable(),
+                ->filterable()
+                ->rules('required', 'string', 'max:255'),
 
             Trix::make('Blurb')
                 ->required()
                 ->alwaysShow()
-                ->fullWidth(),
+                ->fullWidth()
+                ->rules('required', 'string', 'max:2000'),
 
             Number::make('Pages', 'number_of_pages')
                 ->help('The total number of pages in the book')
                 ->required()
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->rules('required', 'int', 'min:1'),
 
             Number::make('Number of Copies')
                 ->help('The total copies of this book that the library owns')
                 ->required()
                 ->default(1)
                 ->sortable()
-                ->filterable(),
+                ->filterable()
+                ->rules('required', 'int', 'min:1'),
 
             Boolean::make('Featured', 'is_featured')
                 ->help('Whether or not this book should be featured on the homepage')
                 ->sortable()
-                ->filterable(),
+                ->filterable()
+                ->rules('boolean'),
 
             URL::make('Purchase URL')
                 ->help('Our preferred link for purchasing a new copy of this book')
                 ->hideFromIndex()
-                ->displayUsing(fn () => $this->purchase_url ? parse_url($this->purchase_url)['host'] : null),
+                ->displayUsing(fn () => $this->purchase_url ? parse_url($this->purchase_url)['host'] : null)
+                ->rules('nullable', 'url'),
 
             File::make('PDF')
                 ->help('Only books in the public domain should have PDF equivalents')
                 ->path('pdfs')
-                ->acceptedTypes('.pdf'),
+                ->acceptedTypes('.pdf')
+                ->rules('nullable', FileRule::types('pdf')->max(12 * 1024))
         ];
     }
 
