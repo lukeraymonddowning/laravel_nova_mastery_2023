@@ -3,11 +3,14 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
+use Laravel\Nova\Fields\URL;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Book extends Resource
@@ -62,12 +65,32 @@ class Book extends Resource
                 ->alwaysShow()
                 ->fullWidth(),
 
+            Number::make('Pages', 'number_of_pages')
+                ->help('The total number of pages in the book')
+                ->required()
+                ->hideFromIndex(),
+
             Number::make('Number of Copies')
                 ->help('The total copies of this book that the library owns')
                 ->required()
                 ->default(1)
                 ->sortable()
                 ->filterable(),
+
+            Boolean::make('Featured', 'is_featured')
+                ->help('Whether or not this book should be featured on the homepage')
+                ->sortable()
+                ->filterable(),
+
+            URL::make('Purchase URL')
+                ->help('Our preferred link for purchasing a new copy of this book')
+                ->hideFromIndex()
+                ->displayUsing(fn () => $this->purchase_url ? parse_url($this->purchase_url)['host'] : null),
+
+            File::make('PDF')
+                ->help('Only books in the public domain should have PDF equivalents')
+                ->path('pdfs')
+                ->acceptedTypes('.pdf'),
         ];
     }
 
