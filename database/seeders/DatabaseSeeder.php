@@ -23,16 +23,19 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         File::deleteDirectory(public_path('storage'));
+        File::ensureDirectoryExists(public_path('storage/authors'));
+        File::ensureDirectoryExists(public_path('storage/covers'));
 
         $user = User::factory()->create([
             'name' => 'Luke Downing',
             'email' => $this->command->ask("What email address would you like to use?", "luke@laracasts.com"),
         ]);
 
-        $this->call(GenreSeeder::class);
+        Publisher::factory(10)->create();
+
+        $this->call([GenreSeeder::class, RealDataSeeder::class]);
 
         $authors = Author::factory(10)->create();
-        Publisher::factory(10)->create();
 
         $numberOfBooks = 50;
 
@@ -54,16 +57,17 @@ class DatabaseSeeder extends Seeder
         $pool->wait();
 
         $books = Book::all();
+        $books->random(3)->toQuery()->update(['is_featured' => true]);
+
+        $customers = Customer::factory(70)
+            ->hasAttached($books->random(rand(0, 8)), ['due_back_at' => fake()->dateTimeBetween('-1 month', '+2 months'), 'returned_at' => null], 'allLoans')
+            ->create();
 
         Review::factory()->for($user, 'reviewer')->forEachSequence(
             ...$books
             ->random(10)
             ->map(fn(Book $book) => ['reviewable_id' => $book->getKey(), 'reviewable_type' => $book->getMorphClass()])
         )->create();
-
-        $customers = Customer::factory(70)
-            ->hasAttached($books->random(rand(0, 8)), ['due_back_at' => fake()->dateTimeBetween('-1 month', '+2 months'), 'returned_at' => null], 'allLoans')
-            ->create();
 
         Review::factory(20)->crossJoinSequence(
             $customers->random(10)->map(fn (Customer $customer) => ['reviewer_id' => $customer->getKey(), 'reviewer_type' => $customer->getMorphClass()]),

@@ -7,6 +7,7 @@ use App\Models\Book;
 use App\Models\Customer;
 use App\Models\Publisher;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
