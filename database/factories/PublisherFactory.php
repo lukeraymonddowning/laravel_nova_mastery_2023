@@ -17,7 +17,8 @@ class PublisherFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->company,
+            'logo' => fake()->imageUrl(300, 300),
         ];
     }
 }

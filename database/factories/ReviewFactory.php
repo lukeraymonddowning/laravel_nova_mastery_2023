@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Book;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,14 @@ class ReviewFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'reviewer_id' => User::factory(),
+            'reviewer_type' => fn (array $attributes) => User::find($attributes['reviewer_id'])->getMorphClass(),
+            'reviewable_id' => Book::factory(),
+            'reviewable_type' => fn (array $attributes) => Book::find($attributes['reviewable_id'])->getMorphClass(),
+            'title' => fake()->sentence,
+            'body' => fake()->paragraphs(5, true),
+            'stars' => fake()->numberBetween(1, 5),
+            'verified_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }
