@@ -3,7 +3,6 @@
 use App\Models\Author;
 use App\Models\Genre;
 use App\Models\Publisher;
-use App\Models\SubGenre;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,7 +17,7 @@ return new class extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Genre::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(SubGenre::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(Genre::class, 'subgenre_id')->nullable()->constrained('genres')->nullOnDelete();
             $table->foreignIdFor(Author::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Publisher::class)->constrained()->cascadeOnDelete();
             $table->string('title');
