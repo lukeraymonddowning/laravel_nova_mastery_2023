@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Resources\ReviewResource;
+use App\Models\Book;
+use App\Models\Review;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +18,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn () => inertia('Landing', [
+    'reviews' => ReviewResource::collection(
+        Review::with(['reviewer', 'reviewable.author'])
+            ->whereMorphedTo('reviewer', User::class)
+            ->whereMorphRelation('reviewable', Book::class, 'is_featured', true)
+            ->groupBy('id')
+            ->groupBy('reviewable_id')
+            ->latest()
+            ->limit(4)
+            ->get()
+    )
+]));

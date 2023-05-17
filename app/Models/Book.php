@@ -12,6 +12,11 @@ class Book extends Model
 {
     use HasFactory;
 
+    protected $with = [
+        'genre',
+        'subgenre',
+    ];
+
     protected $casts = [
         'is_featured' => 'bool',
     ];

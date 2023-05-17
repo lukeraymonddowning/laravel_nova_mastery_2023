@@ -57,17 +57,10 @@ class DatabaseSeeder extends Seeder
         $pool->wait();
 
         $books = Book::all();
-        $books->random(3)->toQuery()->update(['is_featured' => true]);
 
         $customers = Customer::factory(70)
             ->hasAttached($books->random(rand(0, 8)), ['due_back_at' => fake()->dateTimeBetween('-1 month', '+2 months'), 'returned_at' => null], 'allLoans')
             ->create();
-
-        Review::factory()->for($user, 'reviewer')->forEachSequence(
-            ...$books
-            ->random(10)
-            ->map(fn(Book $book) => ['reviewable_id' => $book->getKey(), 'reviewable_type' => $book->getMorphClass()])
-        )->create();
 
         Review::factory(20)->crossJoinSequence(
             $customers->random(10)->map(fn (Customer $customer) => ['reviewer_id' => $customer->getKey(), 'reviewer_type' => $customer->getMorphClass()]),
