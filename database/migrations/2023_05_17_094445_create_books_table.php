@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('number_of_pages');
             $table->integer('number_of_copies');
             $table->boolean('is_featured');
+            $table->string('purchase_url')->nullable();
             $table->string('cover');
             $table->string('pdf')->nullable();
             $table->timestamps();
