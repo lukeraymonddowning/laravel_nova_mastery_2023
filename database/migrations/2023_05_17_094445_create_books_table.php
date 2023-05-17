@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text('blurb');
             $table->integer('number_of_pages');
             $table->integer('number_of_copies');
+            $table->boolean('is_featured');
             $table->string('cover');
             $table->string('pdf')->nullable();
             $table->timestamps();

@@ -17,7 +17,9 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->name,
+            'email' => fake()->safeEmail,
+            'joined_at' => fake()->dateTimeBetween('-2 years'),
         ];
     }
 }

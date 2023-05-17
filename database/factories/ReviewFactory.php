@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Book;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Review>
@@ -28,5 +29,15 @@ class ReviewFactory extends Factory
             'stars' => fake()->numberBetween(1, 5),
             'verified_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
+    }
+
+    public function by(Factory|Model $reviewer)
+    {
+        return $this->for($reviewer, 'reviewer');
+    }
+
+    public function of(Factory|Model $reviewedItem)
+    {
+        return $this->for($reviewedItem, 'reviewable');
     }
 }

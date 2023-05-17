@@ -30,6 +30,7 @@ class BookFactory extends Factory
             'blurb' => fake()->paragraph,
             'number_of_pages' => fake()->numberBetween(100, 500),
             'number_of_copies' => fake()->numberBetween(1, 10),
+            'is_featured' => false,
             'cover' => fake()->image('public/storage/covers', 300, 450, null, false),
             'pdf' => null,
         ];

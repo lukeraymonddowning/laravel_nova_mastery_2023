@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Author;
 use App\Models\Book;
+use App\Models\Customer;
 use App\Models\Genre;
 use App\Models\Publisher;
 use App\Models\Review;
@@ -28,10 +29,10 @@ class DatabaseSeeder extends Seeder
             'email' => $this->command->ask("What email address would you like to use?", "luke@laracasts.com"),
         ]);
 
-        $this->buildGenres();
+        $this->call(GenreSeeder::class);
 
-        Author::factory()->count(10)->create();
-        Publisher::factory()->count(10)->create();
+        $authors = Author::factory(10)->create();
+        Publisher::factory(10)->create();
 
         $numberOfBooks = 50;
 
@@ -44,143 +45,29 @@ class DatabaseSeeder extends Seeder
             $this->command->getOutput()->writeln($output);
         });
 
+        Review::factory()->for($user, 'reviewer')->forEachSequence(
+            ...$authors
+            ->random(4)
+            ->map(fn(Author $author) => ['reviewable_id' => $author->getKey(), 'reviewable_type' => $author->getMorphClass(), 'stars' => null])
+        )->create();
+
         $pool->wait();
 
-        $result = Review::factory()->for($user, 'reviewer')->forEachSequence(
-            ...Book::inRandomOrder()
-                ->limit(10)
-                ->get()
-                ->map(fn (Book $book) => ['reviewable_id' => $book->getKey(), 'reviewable_type' => $book->getMorphClass()])
-        )->create();
-    }
+        $books = Book::all();
 
-    /**
-     * @return void
-     */
-    private function buildGenres(): void
-    {
-        [$fantasy, $horror, $mystery, $romance, $scienceFiction, $thrillerAndSuspense, $western, $biography] = Genre::factory()->forEachSequence(
-            ['name' => 'Fantasy'],
-            ['name' => 'Horror'],
-            ['name' => 'Mystery'],
-            ['name' => 'Romance'],
-            ['name' => 'Science Fiction'],
-            ['name' => 'Thriller and Suspense'],
-            ['name' => 'Western'],
-            ['name' => 'Biography'],
+        Review::factory()->for($user, 'reviewer')->forEachSequence(
+            ...$books
+            ->random(10)
+            ->map(fn(Book $book) => ['reviewable_id' => $book->getKey(), 'reviewable_type' => $book->getMorphClass()])
         )->create();
 
-        Genre::factory()->for($fantasy, 'parent')->forEachSequence(
-            ['name' => 'Alternate History'],
-            ['name' => 'Children\'s Story'],
-            ['name' => 'Comedy'],
-            ['name' => 'Contemporary'],
-            ['name' => 'Fairy Tale'],
-            ['name' => 'Heroic'],
-            ['name' => 'Mythic'],
-            ['name' => 'Superhero'],
-            ['name' => 'Urban'],
-            ['name' => 'Young Adult'],
-        )->create();
+        $customers = Customer::factory(70)
+            ->hasAttached($books->random(rand(0, 8)), ['due_back_at' => fake()->dateTimeBetween('-1 month', '+2 months'), 'returned_at' => null], 'allLoans')
+            ->create();
 
-        Genre::factory()->for($horror, 'parent')->forEachSequence(
-            ['name' => 'Gothic'],
-            ['name' => 'Historical'],
-            ['name' => 'Man-Made'],
-            ['name' => 'Monsters'],
-            ['name' => 'Psychological'],
-            ['name' => 'Quiet Horror'],
-        )->create();
-
-        Genre::factory()->for($mystery, 'parent')->forEachSequence(
-            ['name' => 'Amateur Sleuth'],
-            ['name' => 'Bumbling Detective'],
-            ['name' => 'Caper'],
-            ['name' => 'Child in Peril'],
-            ['name' => 'Cozy'],
-            ['name' => 'Hardboiled'],
-            ['name' => 'Hardboiled'],
-            ['name' => 'Historical'],
-            ['name' => 'Howdunit'],
-            ['name' => 'Legal'],
-            ['name' => 'Locked Room'],
-            ['name' => 'Police Procedural'],
-            ['name' => 'Private Detective'],
-            ['name' => 'Whodunit'],
-        )->create();
-
-        Genre::factory()->for($romance, 'parent')->forEachSequence(
-            ['name' => 'Billionaires'],
-            ['name' => 'Comedy'],
-            ['name' => 'Contemporary'],
-            ['name' => 'Holidays'],
-            ['name' => 'Inspirational'],
-            ['name' => 'Military'],
-            ['name' => 'Regency'],
-            ['name' => 'Romantic Suspense'],
-            ['name' => 'Sports'],
-            ['name' => 'Time Travel'],
-            ['name' => 'Young Adult'],
-        )->create();
-
-        Genre::factory()->for($scienceFiction, 'parent')->forEachSequence(
-            ['name' => 'Aliens'],
-            ['name' => 'Alternate History'],
-            ['name' => 'Alternate/Parallel Universe'],
-            ['name' => 'Apocalyptic/Post-Apocalyptic'],
-            ['name' => 'Biopunk'],
-            ['name' => 'Colonization'],
-            ['name' => 'Cyberpunk'],
-            ['name' => 'Dying Earth'],
-            ['name' => 'Dystopia'],
-            ['name' => 'Galactic Empire'],
-            ['name' => 'Generation Ship'],
-            ['name' => 'Hard Science Fiction'],
-            ['name' => 'Immortality'],
-            ['name' => 'Military'],
-            ['name' => 'Nanopunk'],
-            ['name' => 'Robots/A.I.'],
-            ['name' => 'Soft Science Fiction'],
-            ['name' => 'Space Exploration'],
-            ['name' => 'Space Opera'],
-            ['name' => 'Steampunk'],
-            ['name' => 'Time Travel'],
-            ['name' => 'Utopia'],
-        )->create();
-
-        Genre::factory()->for($thrillerAndSuspense, 'parent')->forEachSequence(
-            ['name' => 'Action'],
-            ['name' => 'Conspiracy'],
-            ['name' => 'Crime'],
-            ['name' => 'Disaster'],
-            ['name' => 'Espionage'],
-            ['name' => 'Forensic'],
-            ['name' => 'Legal'],
-            ['name' => 'Medical'],
-            ['name' => 'Political'],
-            ['name' => 'Psychological'],
-            ['name' => 'Religious'],
-            ['name' => 'Religious'],
-        )->create();
-
-        Genre::factory()->for($western, 'parent')->forEachSequence(
-            ['name' => 'Bounty Hunters'],
-            ['name' => 'Cattle Drive'],
-            ['name' => 'Children\'s Story'],
-            ['name' => 'Gold Rush'],
-            ['name' => 'Gunfighters'],
-            ['name' => 'Land Rush'],
-            ['name' => 'Lawmen'],
-            ['name' => 'Outlaws'],
-            ['name' => 'Revenge'],
-            ['name' => 'Wagon Train'],
-        )->create();
-
-        Genre::factory()->for($biography, 'parent')->forEachSequence(
-            ['name' => 'Historical Fiction'],
-            ['name' => 'Academic'],
-            ['name' => 'Fictional Academic'],
-            ['name' => 'Prophetic'],
-        )->create();
+        Review::factory(20)->crossJoinSequence(
+            $customers->random(10)->map(fn (Customer $customer) => ['reviewer_id' => $customer->getKey(), 'reviewer_type' => $customer->getMorphClass()]),
+            $books->random(4)->map(fn (Book $book) => ['reviewable_id' => $book->getKey(), 'reviewable_type' => $book->getMorphClass()]),
+        )->create(['verified_at' => null]);
     }
 }
