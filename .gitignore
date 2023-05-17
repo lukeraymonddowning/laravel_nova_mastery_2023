@@ -18,3 +18,4 @@ yarn-error.log
 /.idea
 /.vscode
 /nova
+/public/vendor/nova
