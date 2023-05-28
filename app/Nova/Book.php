@@ -3,8 +3,10 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File as FileRule;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\ID;
@@ -39,6 +41,9 @@ class Book extends Resource
     public static $search = [
         'id',
         'title',
+        'author.name',
+        'genre.name',
+        'subgenre.name',
     ];
 
     /**
@@ -50,8 +55,7 @@ class Book extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            ID::make()
-                ->onlyOnDetail(),
+            ID::make()->sortable(),
 
             Image::make('Cover')
                 ->required()
@@ -65,6 +69,33 @@ class Book extends Resource
                 ->filterable()
                 ->rules('required', 'string', 'max:255'),
 
+            BelongsTo::make('Genre')
+                ->relatableQueryUsing(fn ($request, $query) => $query->whereNull('parent_id'))
+                ->rules('required', Rule::exists('genres', 'id')->whereNull('parent_id')),
+
+            BelongsTo::make('Subgenre', resource: Genre::class)
+                ->hideFromIndex()
+                ->nullable()
+                ->dependsOn('genre', function ($subgenre, $request, $data) {
+                    $data['genre'] === null
+                        ? $subgenre->hide()
+                        : $subgenre->relatableQueryUsing(fn ($request, $query) => $query->where('parent_id', $data['genre']));
+                })
+                ->rules(fn ($request) => ['nullable', Rule::exists('genres', 'id')->where('parent_id', $request->genre)]),
+
+            BelongsTo::make('Author')
+                ->searchable()
+                ->showCreateRelationButton()
+                ->modalSize('3xl')
+                ->rules('required', 'exists:authors,id'),
+
+            BelongsTo::make('Publisher')
+                ->showCreateRelationButton()
+                ->modalSize('3xl')
+                ->hideFromIndex()
+                ->filterable()
+                ->rules('required', 'exists:publishers,id'),
+
             Trix::make('Blurb')
                 ->required()
                 ->alwaysShow()
@@ -77,7 +108,7 @@ class Book extends Resource
                 ->hideFromIndex()
                 ->rules('required', 'int', 'min:1'),
 
-            Number::make('Number of Copies')
+            Number::make('Copies', 'number_of_copies')
                 ->help('The total copies of this book that the library owns')
                 ->required()
                 ->default(1)
