@@ -4,21 +4,21 @@ const features = [
         name: 'A Relaxed Layout',
         description:
             'It all starts with our open book-shelf, designed to encourage exploration and discovery. We\'re careful not to overoptimize the layout of our library so you can enjoy the thrill of the hunt and stumble across treasures, both classic and modern.',
-        imageSrc: '/images/Pic%201.png',
+        imageSrc: '/images/Pic 1.png',
         imageAlt: 'Open bookshelf with modern books on the bottom and classic books on the top.',
     },
     {
         name: 'Quiet Chatter',
         description:
             'There\'s nothing worse than a librarian shushing you for talking too loud. We encourage quiet chatter and discussion about books, authors and anything else you can think of. We\'re all about creating a community of book lovers. We also make some of the best coffee and cake in town; the perfect compliment to the perfect read.',
-        imageSrc: '/images/Pic%202.png',
+        imageSrc: '/images/Pic 2.png',
         imageAlt: 'A group of people sitting around a table talking and laughing.',
     },
     {
         name: 'When You\'re Done, Check it Out',
         description:
             'Of course, eventually you have to go back to the real world. However, with our simple subscription, you can check out as many books as you\'d like and take them home to carry on the adventure. Read. Rinse. Repeat.',
-        imageSrc: '/images/Pic%205.png',
+        imageSrc: '/images/Pic 5.png',
         imageAlt: 'A group of people sitting around a table talking and laughing.',
     },
 ]
