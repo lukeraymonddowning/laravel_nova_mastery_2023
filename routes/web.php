@@ -30,3 +30,5 @@ Route::get('/', fn () => inertia('Landing', [
             ->get()
     )
 ]));
+
+Route::get('/book', fn () => Book::first());
