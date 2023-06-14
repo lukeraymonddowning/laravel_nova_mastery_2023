@@ -70,7 +70,7 @@ class Genre extends Resource
                 ->sortable(),
 
             Text::make('Name', function () {
-                if ($this->resource->parent) {
+                if ($this->parent) {
                     return "{$this->name}/{$this->parent->name}";
                 }
 
