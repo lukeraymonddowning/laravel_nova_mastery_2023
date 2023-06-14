@@ -83,7 +83,8 @@ class Book extends Resource
                 ->path('pdfs'),
 
             URL::make('Purchase URL')
-                ->displayUsing(fn ($value) => $value ? parse_url($value, PHP_URL_HOST) : null),
+                ->displayUsing(fn ($value) => $value ? parse_url($value, PHP_URL_HOST) : null)
+                ->hideFromIndex(),
         ];
     }
 
