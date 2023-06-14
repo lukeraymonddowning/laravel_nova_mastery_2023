@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Author;
 use App\Models\Book;
+use App\Models\Genre;
 use App\Models\Publisher;
 use App\Models\Review;
 use App\Models\User;
@@ -67,6 +68,8 @@ class RealDataSeeder extends Seeder
     {
         [$george, $jane, $ernest, $jrr] = $authors;
 
+        $genres = Genre::all();
+
         return Book::factory()->forEachSequence(
             ['title' => '1984', 'author_id' => $george, 'cover' => '/covers/1984.jpeg'],
             ['title' => 'Pride & Prejudice', 'author_id' => $jane, 'cover' => '/covers/pride-and-prejudice.jpeg'],
@@ -83,6 +86,9 @@ class RealDataSeeder extends Seeder
             ['title' => 'The Lord of the Rings', 'author_id' => $jrr, 'cover' => '/covers/the-lord-of-the-rings.jpeg'],
             ['title' => 'The Fellowship of the Ring', 'author_id' => $jrr, 'cover' => '/covers/the-fellowship-of-the-ring.jpeg'],
             ['title' => 'The Two Towers', 'author_id' => $jrr, 'cover' => '/covers/the-two-towers.jpeg'],
-        )->recycle(Publisher::all())->create();
+        )->recycle(Publisher::all())->recycle(Genre::all())->create([
+            'genre_id' => fn () => $genres->whereNull('parent_id')->random()->getKey(),
+            'subgenre_id' => fn () => $genres->whereNotNull('parent_id')->random()->getKey(),
+        ]);
     }
 }
