@@ -71,7 +71,7 @@ class Genre extends Resource
 
             Text::make('Name', function () {
                 if ($this->resource->parent) {
-                    return "{$this->name}/{$this->resource->parent->name}";
+                    return "{$this->name}/{$this->parent->name}";
                 }
 
                 return $this->name;
