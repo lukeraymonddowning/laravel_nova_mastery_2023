@@ -49,15 +49,18 @@ class Author extends Resource
                 ->sortable(),
 
             Avatar::make('Avatar')
+                ->showWhenPeeking()
                 ->rounded()
                 ->rules('required', File::image()->max(1024 * 10))
                 ->path('authors'),
 
             Text::make('Name')
+                ->showWhenPeeking()
                 ->sortable()
                 ->rules('required', 'string', 'max:255'),
 
             Trix::make('Biography')
+                ->showWhenPeeking()
                 ->fullWidth()
                 ->rules('required', 'string', 'max:10000'),
         ];

@@ -57,7 +57,9 @@ class Recording extends Resource
 
             Audio::make('Audio')
                 ->path('recordings')
-                ->rules('required', File::types('mp3', 'wav', 'ogg')->max(1024 * 20))
+                ->showOnIndex()
+                ->creationRules('required')
+                ->rules(File::types('mp3', 'wav', 'ogg')->max(1024 * 20))
         ];
     }
 

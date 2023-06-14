@@ -3,8 +3,10 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\File;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
@@ -38,12 +40,13 @@ class Book extends Resource
         'id',
         'title',
         'blurb',
+        'author.name',
     ];
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      * @return array
      */
     public function fields(NovaRequest $request)
@@ -60,6 +63,13 @@ class Book extends Resource
                 ->rules('required', 'string', 'min:1', 'max:255')
                 ->creationRules('unique:books,title')
                 ->updateRules('unique:books,title,{{resourceId}}'),
+
+            BelongsTo::make('Author')
+                ->sortable(),
+
+            BelongsTo::make('Publisher')
+                ->filterable()
+                ->hideFromIndex(),
 
             Trix::make('Blurb')
                 ->alwaysShow()
@@ -83,15 +93,21 @@ class Book extends Resource
                 ->path('pdfs'),
 
             URL::make('Purchase URL')
-                ->displayUsing(fn ($value) => $value ? parse_url($value, PHP_URL_HOST) : null)
+                ->displayUsing(fn($value) => $value ? parse_url($value, PHP_URL_HOST) : null)
                 ->hideFromIndex(),
+
+            BelongsTo::make('Genre'),
+
+            BelongsTo::make('Subgenre', resource: Genre::class),
+
+            HasMany::make('Audio Recordings', 'recordings', resource: Recording::class),
         ];
     }
 
     /**
      * Get the cards available for the request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      * @return array
      */
     public function cards(NovaRequest $request)
@@ -102,7 +118,7 @@ class Book extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      * @return array
      */
     public function filters(NovaRequest $request)
@@ -113,7 +129,7 @@ class Book extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      * @return array
      */
     public function lenses(NovaRequest $request)
@@ -124,7 +140,7 @@ class Book extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      * @return array
      */
     public function actions(NovaRequest $request)
