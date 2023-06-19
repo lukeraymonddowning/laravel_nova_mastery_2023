@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\File;
 use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\MorphOne;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -55,6 +56,9 @@ class Publisher extends Resource
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'string', 'max:255'),
+
+            MorphOne::make('Address')
+                ->required(),
         ];
     }
 

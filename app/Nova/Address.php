@@ -5,6 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\MorphTo;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -49,6 +50,12 @@ class Address extends Resource
         return [
             ID::make()
                 ->sortable(),
+
+            MorphTo::make('Addressable')
+                ->types([
+                    Customer::class,
+                    Publisher::class,
+                ]),
 
             Text::make('Line 1')
                 ->rules('required', 'string', 'max:255'),

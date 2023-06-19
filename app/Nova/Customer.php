@@ -2,11 +2,14 @@
 
 namespace App\Nova;
 
+use App\Nova\Relationships\LoanFields;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Email;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\MorphOne;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -61,6 +64,12 @@ class Customer extends Resource
                 ->rules('required', 'date', 'before_or_equal:today')
                 ->max(now())
                 ->step(CarbonInterval::minutes(1)),
+
+            MorphOne::make('Address')
+                ->required(),
+
+            BelongsToMany::make('Current Loans', resource: Book::class)
+                ->fields(new LoanFields()),
         ];
     }
 
