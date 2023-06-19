@@ -12,6 +12,10 @@ class Customer extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'joined_at' => 'datetime',
+    ];
+
     public function reviews(): MorphMany
     {
         return $this->morphMany(Review::class, 'reviewer');
