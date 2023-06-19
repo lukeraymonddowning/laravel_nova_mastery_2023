@@ -66,6 +66,11 @@ class Author extends Resource
         ];
     }
 
+    public function subtitle()
+    {
+        return str($this->biography)->limit(120)->stripTags();
+    }
+
     /**
      * Get the cards available for the request.
      *

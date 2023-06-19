@@ -52,6 +52,7 @@ class Address extends Resource
                 ->sortable(),
 
             MorphTo::make('Addressable')
+                ->searchable()
                 ->types([
                     Customer::class,
                     Publisher::class,

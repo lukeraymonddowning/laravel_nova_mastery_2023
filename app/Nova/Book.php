@@ -71,9 +71,16 @@ class Book extends Resource
                 ->updateRules('unique:books,title,{{resourceId}}'),
 
             BelongsTo::make('Author')
+                ->showCreateRelationButton()
+                ->modalSize('3xl')
+                ->searchable()
+                ->withSubtitles()
                 ->sortable(),
 
             BelongsTo::make('Publisher')
+                ->showCreateRelationButton()
+                ->modalSize('3xl')
+                ->searchable()
                 ->filterable()
                 ->hideFromIndex(),
 
