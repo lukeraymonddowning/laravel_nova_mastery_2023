@@ -2,7 +2,15 @@
 
 namespace App\Providers;
 
+use App\Nova\Author;
+use App\Nova\Book;
+use App\Nova\Customer;
+use App\Nova\Genre;
+use App\Nova\Publisher;
+use App\Nova\User;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Nova\Menu\MenuItem;
+use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
@@ -18,6 +26,25 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         parent::boot();
 
         Nova::withBreadcrumbs();
+
+        Nova::initialPath('/resources/customers');
+
+        Nova::mainMenu(fn ($request) => [
+            MenuSection::make('Customers', [
+                MenuItem::resource(Customer::class),
+            ])->icon('user-group'),
+
+            MenuSection::make('Books', [
+                MenuItem::resource(Book::class),
+                MenuItem::resource(Author::class),
+                MenuItem::resource(Publisher::class),
+                MenuItem::resource(Genre::class),
+            ])->icon('book-open')->collapsable(),
+
+            MenuSection::make('Support', [
+                MenuItem::resource(User::class),
+            ])->icon('cog'),
+        ]);
     }
 
     /**
