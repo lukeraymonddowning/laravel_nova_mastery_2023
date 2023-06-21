@@ -19,3 +19,5 @@ yarn-error.log
 /.vscode
 /nova
 /public/vendor/nova
+/data.ms
+meilisearch
