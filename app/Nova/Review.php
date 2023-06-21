@@ -11,6 +11,8 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Query\Search\SearchableMorphToRelation;
+use Laravel\Nova\Query\Search\SearchableText;
 
 class Review extends Resource
 {
@@ -28,16 +30,18 @@ class Review extends Resource
      */
     public static $title = 'title';
 
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
-    public static $search = [
-        'id',
-        'title',
-        'stars',
-    ];
+    public static $with = ['reviewable'];
+
+    public static $globalSearchResults = 10;
+
+    public function subtitle()
+    {
+        return match ($this->reviewable::class) {
+            \App\Models\Author::class => $this->reviewable->name,
+            \App\Models\Book::class => $this->reviewable->title,
+            default => null,
+        };
+    }
 
     /**
      * Get the fields displayed by the resource.
