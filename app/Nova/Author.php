@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\File;
 use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\MorphMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -63,6 +64,8 @@ class Author extends Resource
                 ->showWhenPeeking()
                 ->fullWidth()
                 ->rules('required', 'string', 'max:10000'),
+
+            MorphMany::make('Reviews'),
         ];
     }
 

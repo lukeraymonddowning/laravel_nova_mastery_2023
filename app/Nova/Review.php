@@ -2,33 +2,31 @@
 
 namespace App\Nova;
 
-use App\Nova\Relationships\LoanFields;
-use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Email;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\MorphMany;
-use Laravel\Nova\Fields\MorphOne;
+use Laravel\Nova\Fields\MorphTo;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Customer extends Resource
+class Review extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<\App\Models\Customer>
+     * @var class-string<\App\Models\Review>
      */
-    public static $model = \App\Models\Customer::class;
+    public static $model = \App\Models\Review::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'title';
 
     /**
      * The columns that should be searched.
@@ -37,8 +35,8 @@ class Customer extends Resource
      */
     public static $search = [
         'id',
-        'name',
-        'email',
+        'title',
+        'stars',
     ];
 
     /**
@@ -53,26 +51,37 @@ class Customer extends Resource
             ID::make()
                 ->sortable(),
 
-            Text::make('Name')
+            MorphTo::make('Reviewer')
+                ->types([
+                    User::class,
+                    Customer::class,
+                ]),
+
+            MorphTo::make('Reviewable')
+                ->types([
+                    Author::class,
+                    Book::class,
+                ]),
+
+            Text::make('Title')
                 ->rules('required', 'string', 'max:255'),
 
-            Email::make('Email')
-                ->rules('required', 'email', 'max:255')
-                ->creationRules('unique:customers,email')
-                ->updateRules('unique:customers,email,{{resourceId}}'),
+            Trix::make('Body')
+                ->rules('required', 'string', 'max:65535'),
 
-            DateTime::make('Joined At')
-                ->rules('required', 'date', 'before_or_equal:today')
-                ->max(now())
-                ->step(CarbonInterval::minutes(1)),
+            Number::make('Stars')
+                ->min(1)
+                ->max(5)
+                ->rules('nullable', 'integer', 'min:1', 'max:5'),
 
-            MorphOne::make('Address')
-                ->required(),
+            DateTime::make('Verified At')
+                ->nullable()
+                ->hideFromIndex()
+                ->rules('nullable', 'date'),
 
-            BelongsToMany::make('Current Loans', resource: Book::class)
-                ->fields(new LoanFields()),
-
-            MorphMany::make('Reviews'),
+            Boolean::make('Verified', fn () => $this->verified_at !== null)
+                ->filterable()
+                ->exceptOnForms(),
         ];
     }
 

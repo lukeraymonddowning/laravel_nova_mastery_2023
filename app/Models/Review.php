@@ -10,6 +10,10 @@ class Review extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'verified_at' => 'datetime',
+    ];
+
     public function reviewer(): MorphTo
     {
         return $this->morphTo();
