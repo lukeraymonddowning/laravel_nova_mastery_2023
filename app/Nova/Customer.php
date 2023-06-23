@@ -2,6 +2,9 @@
 
 namespace App\Nova;
 
+use App\Nova\Filters\HasReviewsFilter;
+use App\Nova\Filters\LoanTimeframeFilter;
+use App\Nova\Filters\LoanTimeframeToFilter;
 use App\Nova\Relationships\LoanFields;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
@@ -62,6 +65,7 @@ class Customer extends Resource
                 ->updateRules('unique:customers,email,{{resourceId}}'),
 
             DateTime::make('Joined At')
+                ->filterable()
                 ->rules('required', 'date', 'before_or_equal:today')
                 ->max(now())
                 ->step(CarbonInterval::minutes(1)),
@@ -95,7 +99,11 @@ class Customer extends Resource
      */
     public function filters(NovaRequest $request)
     {
-        return [];
+        return [
+            new HasReviewsFilter(),
+            new LoanTimeframeFilter('>='),
+            new LoanTimeframeFilter('<='),
+        ];
     }
 
     /**
