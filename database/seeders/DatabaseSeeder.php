@@ -12,6 +12,7 @@ use App\Models\Review;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Process\Pool;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 
@@ -58,13 +59,23 @@ class DatabaseSeeder extends Seeder
 
         $books = Book::all();
 
-        $customers = Customer::factory(70)
-            ->hasAttached($books->random(rand(0, 8)), ['due_back_at' => fake()->dateTimeBetween('-1 month', '+2 months'), 'returned_at' => null], 'allLoans')
-            ->create();
+        $customers = collect();
+
+        for ($i = 0; $i < 7; $i++) {
+            $newCustomers = Customer::factory(10)
+                ->hasAttached($books->random(rand(0, 8)), [
+                    'due_back_at' => fake()->dateTimeBetween('-1 month', '+2 months'),
+                    'returned_at' => null,
+                    'created_at' => fake()->dateTimeBetween('-6 months', '-2 months')
+                ], 'allLoans')
+                ->create();
+
+            $customers = $customers->merge($newCustomers);
+        }
 
         Review::factory(20)->crossJoinSequence(
-            $customers->random(10)->map(fn (Customer $customer) => ['reviewer_id' => $customer->getKey(), 'reviewer_type' => $customer->getMorphClass()]),
-            $books->random(4)->map(fn (Book $book) => ['reviewable_id' => $book->getKey(), 'reviewable_type' => $book->getMorphClass()]),
+            $customers->random(10)->map(fn(Customer $customer) => ['reviewer_id' => $customer->getKey(), 'reviewer_type' => $customer->getMorphClass()]),
+            $books->random(4)->map(fn(Book $book) => ['reviewable_id' => $book->getKey(), 'reviewable_type' => $book->getMorphClass()]),
         )->create(['verified_at' => null]);
     }
 }

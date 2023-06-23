@@ -30,7 +30,8 @@ class Customer extends Model
     {
         return $this->belongsToMany(Book::class)
             ->using(Loan::class)
-            ->withPivot(['due_back_at', 'returned_at']);
+            ->withPivot(['due_back_at', 'returned_at'])
+            ->withTimestamps();
     }
 
     public function currentLoans(): BelongsToMany
