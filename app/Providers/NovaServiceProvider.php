@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Nova\Author;
 use App\Nova\Book;
 use App\Nova\Customer;
+use App\Nova\Dashboards\Main;
 use App\Nova\Genre;
 use App\Nova\Lenses\BookStock;
 use App\Nova\Publisher;
@@ -31,6 +32,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::initialPath('/resources/customers');
 
         Nova::mainMenu(fn ($request) => [
+            MenuItem::dashboard(Main::class)->name('Overview'),
+
             MenuSection::make('Customers', [
                 MenuItem::resource(Customer::class),
             ])->icon('user-group'),
