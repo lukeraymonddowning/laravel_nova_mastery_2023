@@ -6,6 +6,7 @@ use App\Nova\Author;
 use App\Nova\Book;
 use App\Nova\Customer;
 use App\Nova\Genre;
+use App\Nova\Lenses\BookStock;
 use App\Nova\Publisher;
 use App\Nova\User;
 use Illuminate\Support\Facades\Gate;
@@ -36,6 +37,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
             MenuSection::make('Books', [
                 MenuItem::resource(Book::class),
+                MenuItem::lens(Book::class, BookStock::class),
                 MenuItem::resource(Author::class),
                 MenuItem::resource(Publisher::class),
                 MenuItem::resource(Genre::class),

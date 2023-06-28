@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Lenses\BookStock;
 use App\Nova\Relationships\LoanFields;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -168,7 +169,9 @@ class Book extends Resource
      */
     public function lenses(NovaRequest $request)
     {
-        return [];
+        return [
+            new BookStock(),
+        ];
     }
 
     /**
