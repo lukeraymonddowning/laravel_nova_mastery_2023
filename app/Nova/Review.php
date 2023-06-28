@@ -2,7 +2,11 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\DestroyUnverifiedReviews;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
@@ -46,7 +50,7 @@ class Review extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      * @return array
      */
     public function fields(NovaRequest $request)
@@ -83,7 +87,7 @@ class Review extends Resource
                 ->hideFromIndex()
                 ->rules('nullable', 'date'),
 
-            Boolean::make('Verified', fn () => $this->verified_at !== null)
+            Boolean::make('Verified', fn() => $this->verified_at !== null)
                 ->filterable()
                 ->exceptOnForms(),
         ];
@@ -92,7 +96,7 @@ class Review extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      * @return array
      */
     public function cards(NovaRequest $request)
@@ -103,7 +107,7 @@ class Review extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      * @return array
      */
     public function filters(NovaRequest $request)
@@ -114,7 +118,7 @@ class Review extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      * @return array
      */
     public function lenses(NovaRequest $request)
@@ -125,11 +129,20 @@ class Review extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      * @return array
      */
     public function actions(NovaRequest $request)
     {
-        return [];
+        return [
+            Action::using('Verify', function (ActionFields $fields, Collection $models) {
+                \App\Models\Review::whereKey($models->pluck('id'))
+                    ->whereNull('verified_at')
+                    ->update([
+                        'verified_at' => now(),
+                    ]);
+            }),
+            (new DestroyUnverifiedReviews())->standalone()->confirmText('Are you sure you want to run this action? This action cannot be undone.'),
+        ];
     }
 }
