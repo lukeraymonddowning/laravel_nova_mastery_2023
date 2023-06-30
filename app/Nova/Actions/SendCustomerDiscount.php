@@ -23,23 +23,29 @@ class SendCustomerDiscount extends Action
     /**
      * Perform the action on the given models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
+     * @param \Laravel\Nova\Fields\ActionFields $fields
+     * @param \Illuminate\Support\Collection $models
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        //$models->each(fn ($customer) => );
+        $models->each(fn($customer) => $this->discountService->email($customer, $fields['discount']));
     }
 
     /**
      * Get the fields available on the action.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      * @return array
      */
     public function fields(NovaRequest $request)
     {
-        return [];
+        return [
+            Number::make('Discount')
+                ->default(fn () => 10)
+                ->min(1)
+                ->max(100)
+                ->rules('required', 'integer', 'min:1', 'max:100'),
+        ];
     }
 }
