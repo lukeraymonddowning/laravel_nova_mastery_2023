@@ -10,7 +10,7 @@ class DiscountService
     {
         /**
          * Welcome, fellow source code reader! You caught me faking a slow email service.
-         * I can only apologise for the complete lack of trust this must engendered in you.
+         * I can only apologise for the complete lack of trust this must have engendered in you.
          */
 
         ray('Sending discount email to ' . $user->email . ' with ' . $discount . '% discount…');
