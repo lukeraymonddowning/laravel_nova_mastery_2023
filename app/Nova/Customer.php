@@ -127,7 +127,9 @@ class Customer extends Resource
     public function actions(NovaRequest $request)
     {
         return [
-            resolve(SendCustomerDiscount::class),
+            resolve(SendCustomerDiscount::class, [
+                'user' => $request->user(),
+            ]),
         ];
     }
 }
