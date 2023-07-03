@@ -3,18 +3,24 @@
 namespace App\Nova\Actions;
 
 use App\Services\DiscountService\DiscountService;
+use Illuminate\Bus\Batch;
+use Illuminate\Bus\Batchable;
+use Illuminate\Bus\PendingBatch;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Contracts\BatchableAction;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class SendCustomerDiscount extends Action
+class SendCustomerDiscount extends Action implements ShouldQueue, BatchableAction
 {
-    use InteractsWithQueue, Queueable;
+    use InteractsWithQueue, Queueable, Batchable;
+
+    public static $chunkCount = 1;
 
     public function __construct(private DiscountService $discountService)
     {
@@ -47,5 +53,10 @@ class SendCustomerDiscount extends Action
                 ->max(100)
                 ->rules('required', 'integer', 'min:1', 'max:100'),
         ];
+    }
+
+    public function withBatch(ActionFields $fields, PendingBatch $batch)
+    {
+        $batch->then(fn (Batch $batch) => ray($batch->resourceIds));
     }
 }
