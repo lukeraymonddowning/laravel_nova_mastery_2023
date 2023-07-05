@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "acef405a80d3a1852990de3011141138",
+    "content-hash": "87d6e3a397cb3fc6917b1284cb2a0672",
     "packages": [
         {
             "name": "brick/math",
@@ -1773,11 +1773,17 @@
         },
         {
             "name": "laravel/nova",
-            "version": "4.24.3",
+            "version": "4.26.3",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:laravel/nova.git",
+                "reference": "4a4f4a548a9abe04934414212e484b27cf9860ec"
+            },
             "dist": {
-                "type": "path",
-                "url": "./nova",
-                "reference": "f20878fb67e3a7e70b032f8fda34716a35d8e26a"
+                "type": "zip",
+                "url": "https://nova.laravel.com/dist/laravel/nova/laravel-nova-4a4f4a548a9abe04934414212e484b27cf9860ec-zip-4c1a82.zip",
+                "reference": "4a4f4a548a9abe04934414212e484b27cf9860ec",
+                "shasum": "837efb43c116f89da00ab5df40d5a6a571477a58"
             },
             "require": {
                 "brick/money": "^0.5.0|^0.6.0|^0.7.0|^0.8.0",
@@ -1851,6 +1857,11 @@
                     "./vendor/bin/testbench-dusk package:dusk-purge",
                     "./vendor/bin/phpunit -c phpunit.dusk.xml"
                 ],
+                "test:local": [
+                    "./vendor/bin/testbench-dusk package:dusk-purge",
+                    "./vendor/bin/phpunit -c phpunit.xml --group date-field,datetime-field,external-network --testdox",
+                    "./vendor/bin/phpunit -c phpunit.dusk.xml --group date-field,datetime-field,external-network --testdox"
+                ],
                 "dusk:filter": [
                     "./vendor/bin/testbench-dusk package:dusk-purge && ./vendor/bin/phpunit -c phpunit.dusk.xml --filter"
                 ]
@@ -1869,9 +1880,10 @@
                 "admin",
                 "laravel"
             ],
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "source": "https://github.com/laravel/nova/tree/v4.26.3"
+            },
+            "time": "2023-06-30T04:49:39+00:00"
         },
         {
             "name": "laravel/sanctum",
@@ -4442,7 +4454,7 @@
         },
         {
             "name": "readit/star-rating",
-            "version": "dev-episode_22",
+            "version": "dev-episode_23",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/StarRating",
