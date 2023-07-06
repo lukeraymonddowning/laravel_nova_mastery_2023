@@ -5,7 +5,9 @@
         "dev": "vite",
         "build": "vite build",
         "build-star-rating": "cd nova-components/StarRating && npm run dev",
-        "build-star-rating-prod": "cd nova-components/StarRating && npm run prod"
+        "build-star-rating-prod": "cd nova-components/StarRating && npm run prod",
+        "build-popular-books-bar-chart": "cd nova-components/PopularBooksBarChart && npm run dev",
+        "build-popular-books-bar-chart-prod": "cd nova-components/PopularBooksBarChart && npm run prod"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^4.2.3",

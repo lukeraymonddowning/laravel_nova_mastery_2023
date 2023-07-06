@@ -23,6 +23,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\URL;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Readit\PopularBooksBarChart\PopularBooksBarChart;
 
 class Book extends Resource
 {
@@ -150,6 +151,7 @@ class Book extends Resource
     {
         return [
             new NewBooks(),
+            new PopularBooksBarChart(),
         ];
     }
 

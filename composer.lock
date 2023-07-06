@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "87d6e3a397cb3fc6917b1284cb2a0672",
+    "content-hash": "de1d67f6aac663d9252524d20c8c718c",
     "packages": [
         {
             "name": "brick/math",
@@ -4451,6 +4451,42 @@
                 }
             ],
             "time": "2023-03-13T14:25:33+00:00"
+        },
+        {
+            "name": "readit/popular-books-bar-chart",
+            "version": "dev-episode_23",
+            "dist": {
+                "type": "path",
+                "url": "./nova-components/PopularBooksBarChart",
+                "reference": "85d736a42eb9019d90ef2556c0f1cee0c0d3ac05"
+            },
+            "require": {
+                "php": "^7.3|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Readit\\PopularBooksBarChart\\CardServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Readit\\PopularBooksBarChart\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova card.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "readit/star-rating",
@@ -9834,7 +9870,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "readit/star-rating": 20
+        "readit/star-rating": 20,
+        "readit/popular-books-bar-chart": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

@@ -18,7 +18,8 @@
         "laravel/scout": "^10.2",
         "laravel/tinker": "^2.8",
         "meilisearch/meilisearch-php": "^1.2",
-        "readit/star-rating": "@dev"
+        "readit/star-rating": "@dev",
+        "readit/popular-books-bar-chart": "@dev"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -81,6 +82,10 @@
         {
             "type": "path",
             "url": "./nova-components/StarRating"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/PopularBooksBarChart"
         }
     ]
 }
