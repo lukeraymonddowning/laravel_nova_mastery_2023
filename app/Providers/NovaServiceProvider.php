@@ -15,7 +15,6 @@ use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
-use Readit\NytBestsellers\NytBestsellers;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -46,8 +45,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 MenuItem::resource(Publisher::class),
                 MenuItem::resource(Genre::class),
             ])->icon('book-open')->collapsable(),
-
-            (new NytBestsellers())->menu($request),
 
             MenuSection::make('Support', [
                 MenuItem::resource(User::class),
@@ -104,7 +101,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function tools()
     {
         return [
-            new NytBestsellers(),
         ];
     }
 
