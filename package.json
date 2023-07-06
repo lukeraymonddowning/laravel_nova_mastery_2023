@@ -7,7 +7,9 @@
         "build-star-rating": "cd nova-components/StarRating && npm run dev",
         "build-star-rating-prod": "cd nova-components/StarRating && npm run prod",
         "build-popular-books-bar-chart": "cd nova-components/PopularBooksBarChart && npm run dev",
-        "build-popular-books-bar-chart-prod": "cd nova-components/PopularBooksBarChart && npm run prod"
+        "build-popular-books-bar-chart-prod": "cd nova-components/PopularBooksBarChart && npm run prod",
+        "build-nyt-bestsellers": "cd nova-components/NytBestsellers && npm run dev",
+        "build-nyt-bestsellers-prod": "cd nova-components/NytBestsellers && npm run prod"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^4.2.3",
