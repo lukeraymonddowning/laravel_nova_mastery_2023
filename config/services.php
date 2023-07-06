@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'nyt' => [
+        'key' => env('NYT_KEY'),
+    ],
+
 ];
