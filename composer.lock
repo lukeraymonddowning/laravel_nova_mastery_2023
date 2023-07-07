@@ -4454,7 +4454,7 @@
         },
         {
             "name": "readit/nyt-bestsellers",
-            "version": "dev-episode_24",
+            "version": "dev-episode_25",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/NytBestsellers",
@@ -4490,7 +4490,7 @@
         },
         {
             "name": "readit/popular-books-bar-chart",
-            "version": "dev-episode_24",
+            "version": "dev-episode_25",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/PopularBooksBarChart",
@@ -4526,7 +4526,7 @@
         },
         {
             "name": "readit/star-rating",
-            "version": "dev-episode_24",
+            "version": "dev-episode_25",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/StarRating",
