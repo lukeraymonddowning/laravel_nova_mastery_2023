@@ -9,6 +9,7 @@ use App\Models\Publisher;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -33,5 +34,13 @@ class AppServiceProvider extends ServiceProvider
             'book' => Book::class,
             'author' => Author::class,
         ]);
+
+        Http::macro('nyt', function () {
+            return $this
+                ->baseUrl('https://api.nytimes.com/svc/books/v3')
+                ->withQueryParameters([
+                    'api-key' => config('services.nyt.key'),
+                ]);
+        });
     }
 }
